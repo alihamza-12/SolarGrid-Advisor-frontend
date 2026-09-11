@@ -1,4 +1,7 @@
-const BASE = "/api";
+// Local dev uses the Vite proxy ("/api"); production uses VITE_API_URL,
+// e.g. VITE_API_URL=https://solargrid-backend-production-f592.up.railway.app
+const API_ROOT = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, "");
+const BASE = API_ROOT ? `${API_ROOT}/api` : "/api";
 
 async function j<T>(res: Response): Promise<T> {
   if (!res.ok) {
@@ -60,7 +63,7 @@ export const api = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(rate),
-    }).then((r) => j(r)),
+    }).then((r) => j<any>(r)),
 
   dashboardCalc: (body: {
     disco: string;
