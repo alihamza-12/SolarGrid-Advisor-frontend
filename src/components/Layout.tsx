@@ -2,17 +2,18 @@ import { NavLink, Outlet } from "react-router-dom";
 import {
   Sun, MessageCircle, LayoutDashboard, FileText, Receipt, Zap, Moon, Languages,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useI18n } from "../i18n";
 import { useTheme } from "../theme/ThemeContext";
 
-const NAV = [
+const NAV: { to: string; key: string; icon: LucideIcon; end?: boolean }[] = [
   { to: "/", key: "nav_home", icon: Sun, end: true },
   { to: "/chat", key: "nav_chat", icon: MessageCircle },
   { to: "/dashboard", key: "nav_dashboard", icon: LayoutDashboard },
   { to: "/documents", key: "nav_documents", icon: FileText },
   { to: "/bills", key: "nav_bills", icon: Receipt },
   { to: "/solar", key: "nav_solar", icon: Zap },
-] as const;
+];
 
 export default function Layout() {
   const { t, lang, setLang } = useI18n();
