@@ -1,5 +1,5 @@
 // Local dev uses the Vite proxy ("/api"); production uses VITE_API_URL,
-// e.g. VITE_API_URL=https://solargrid-backend-production-f592.up.railway.app
+// e.g. VITE_API_URL=https://solargrid-backend.up.railway.app
 const API_ROOT = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, "");
 const BASE = API_ROOT ? `${API_ROOT}/api` : "/api";
 
@@ -27,11 +27,17 @@ export interface LLMConfig {
 
 export const OFFLINE_PROVIDER = "Offline (no LLM — retrieval only)";
 
+// Default LLM: Groq with gpt-oss-120b pre-selected — the user only pastes an
+// API key and chats. (Must match the provider name in backend core/config.py.)
+export const GROQ_PROVIDER = "Groq (free, recommended)";
+export const GROQ_BASE_URL = "https://api.groq.com/openai/v1";
+export const GROQ_MODEL = "openai/gpt-oss-120b";
+
 export const defaultLLMConfig: LLMConfig = {
-  provider: OFFLINE_PROVIDER,
-  base_url: "",
+  provider: GROQ_PROVIDER,
+  base_url: GROQ_BASE_URL,
   api_key: "",
-  model: "",
+  model: GROQ_MODEL,
   temperature: 0.2,
 };
 

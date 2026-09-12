@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Plug, Loader2 } from "lucide-react";
 import { useI18n } from "../i18n";
 import { useLLM } from "../theme/LLMContext";
-import { api, OFFLINE_PROVIDER, type HealthResponse } from "../api/client";
+import { api, type HealthResponse } from "../api/client";
 
 export default function LLMSettingsPanel({ providers }: { providers: HealthResponse["llm_providers"] | null }) {
   const { t } = useI18n();
@@ -10,7 +10,11 @@ export default function LLMSettingsPanel({ providers }: { providers: HealthRespo
   const [testing, setTesting] = useState(false);
   const [testResult, setTestResult] = useState<{ ok: boolean; message: string } | null>(null);
 
-  const providerNames = providers ? Object.keys(providers) : [OFFLINE_PROVIDER];
+  const names = providers ? Object.keys(providers) : [];
+  // Always list the current provider first — covers the loading window and
+  // backends that predate the provider entry (base URL + model travel with
+  // the request, so chat works either way).
+  const providerNames = names.includes(llm.provider) ? names : [llm.provider, ...names];
   const isOffline = llm.provider.includes("Offline");
 
   const onProviderChange = (name: string) => {

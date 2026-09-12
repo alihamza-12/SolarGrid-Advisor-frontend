@@ -8,7 +8,7 @@ interface LLMCtx {
 
 const Ctx = createContext<LLMCtx | null>(null);
 
-const STORAGE_KEY = "sga_llm_config";
+const STORAGE_KEY = "sga_llm_config_v2";
 
 function load(): LLMConfig {
   try {
