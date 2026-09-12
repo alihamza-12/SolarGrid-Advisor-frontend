@@ -9,7 +9,7 @@ import { ErrorBanner, Field, SuccessBanner, Toggle, fieldCls, fieldStyle } from 
 interface ExtractResult {
   bill_id: string;
   filename: string;
-  fields: Record<string, string | number>;
+  fields: Record<string, string | number | null>;
   insights: string[];
   raw_text_preview: string;
   llm_used?: boolean;
@@ -20,7 +20,7 @@ interface ExtractResult {
 interface SavedBill {
   id: string;
   name: string;
-  fields: Record<string, string | number>;
+  fields: Record<string, string | number | null>;
   ts: string;
 }
 
@@ -113,6 +113,7 @@ export default function Bills() {
   };
 
   const fieldEntries = result ? Object.entries(result.fields) : [];
+  const foundCount = fieldEntries.filter(([, v]) => v !== null && v !== undefined).length;
 
   return (
     <div className="pb-16 md:pb-0 space-y-5">
@@ -164,7 +165,7 @@ export default function Bills() {
           <div className="card px-5 py-5">
             <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
               <h3 className="font-display font-bold text-[15px]" style={{ color: "var(--text)" }}>
-                {t("bills_extracted")} ({fieldEntries.length}/{result.total_fields ?? 11})
+                {t("bills_extracted")} ({foundCount}/{result.total_fields ?? 11})
               </h3>
               <button
                 onClick={() => void save()}
@@ -183,9 +184,13 @@ export default function Bills() {
                 {fieldEntries.map(([k, v]) => (
                   <div key={k} className="flex justify-between gap-3 rounded-lg px-3 py-2 text-[13px] border" style={{ borderColor: "var(--card-border)", background: "var(--bg-2)" }}>
                     <span style={{ color: "var(--text-muted)" }}>{k}</span>
-                    <b style={{ color: "var(--text)" }}>
-                      {typeof v === "number" ? v.toLocaleString("en-US") : v}
-                    </b>
+                    {v === null || v === undefined ? (
+                      <span title="Not found on this bill" style={{ color: "var(--text-muted)" }}>—</span>
+                    ) : (
+                      <b style={{ color: "var(--text)" }}>
+                        {typeof v === "number" ? v.toLocaleString("en-US") : v}
+                      </b>
+                    )}
                   </div>
                 ))}
               </div>
@@ -263,7 +268,7 @@ export default function Bills() {
                   {Object.entries(b.fields ?? {}).map(([k, v]) => (
                     <div key={k} className="flex justify-between gap-3 text-[12.5px]">
                       <span style={{ color: "var(--text-muted)" }}>{k}</span>
-                      <b style={{ color: "var(--text)" }}>{typeof v === "number" ? v.toLocaleString("en-US") : v}</b>
+                      {v === null || v === undefined ? <span title="Not found on this bill" style={{ color: "var(--text-muted)" }}>—</span> : <b style={{ color: "var(--text)" }}>{typeof v === "number" ? v.toLocaleString("en-US") : v}</b>}
                     </div>
                   ))}
                 </div>
