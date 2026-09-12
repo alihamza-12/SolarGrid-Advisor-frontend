@@ -12,6 +12,9 @@ interface ExtractResult {
   fields: Record<string, string | number>;
   insights: string[];
   raw_text_preview: string;
+  llm_used?: boolean;
+  llm_note?: string | null;
+  total_fields?: number;
 }
 
 interface SavedBill {
@@ -161,7 +164,7 @@ export default function Bills() {
           <div className="card px-5 py-5">
             <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
               <h3 className="font-display font-bold text-[15px]" style={{ color: "var(--text)" }}>
-                {t("bills_extracted")}
+                {t("bills_extracted")} ({fieldEntries.length}/{result.total_fields ?? 11})
               </h3>
               <button
                 onClick={() => void save()}
@@ -186,6 +189,11 @@ export default function Bills() {
                   </div>
                 ))}
               </div>
+            )}
+            {result.llm_note && (
+              <p className="text-[12.5px] mt-2" style={{ color: "var(--amber)" }}>
+                {result.llm_note}
+              </p>
             )}
           </div>
 
