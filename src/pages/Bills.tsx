@@ -27,7 +27,7 @@ export default function Bills() {
   const [health, setHealth] = useState<HealthResponse | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
-  const [useLlm, setUseLlm] = useState(false);
+  const [useLlm, setUseLlm] = useState(true);
   const [extracting, setExtracting] = useState(false);
   const [result, setResult] = useState<ExtractResult | null>(null);
   const [history, setHistory] = useState<SavedBill[]>([]);
